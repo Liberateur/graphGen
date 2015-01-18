@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+	<head>
+		
+		<style type="text/css">
+
+			/* Reset CSS */
+			html, body, body div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, figure, footer, header, menu, nav, section, time, mark, audio, video, details, summary { margin: 0; padding: 0; border: 0; font-size: 100%; font-weight: normal; vertical-align: baseline; background: transparent; }
+			article, aside, figure, footer, header, nav, section, details, summary {display: block;}
+			*, *:before, *:after {box-sizing: border-box; }
+			img, object, embed {max-width: 100%;}
+			html {overflow-y: scroll;}
+			ul {list-style: none;}
+			blockquote, q {quotes: none;}
+			blockquote:before, blockquote:after, q:before, q:after {content: ''; content: none;}
+			a {margin: 0; padding: 0; font-size: 100%; vertical-align: baseline; background: transparent;}
+			del {text-decoration: line-through;}
+			abbr[title], dfn[title] {border-bottom: 1px dotted #000; cursor: help;}
+			table {border-collapse: collapse; border-spacing: 0;}
+			th {font-weight: bold; vertical-align: bottom;}
+			td {font-weight: normal; vertical-align: top;}
+			hr {display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0;}
+			input, select {vertical-align: middle;}
+			pre { white-space: pre; white-space: pre-wrap; white-space: pre-line; word-wrap: break-word; }
+			input[type="radio"] {vertical-align: text-bottom;}
+			input[type="checkbox"] {vertical-align: bottom;}
+			select, input, textarea {font: 99% sans-serif;}
+			table {font-size: inherit; font: 100%;}
+			small {font-size: 85%;}
+			strong {font-weight: bold;}
+			td, td img {vertical-align: top;} 
+			sub, sup {font-size: 75%; line-height: 0; position: relative;}
+			sup {top: -0.5em;}
+			sub {bottom: -0.25em;}
+			pre, code, kbd, samp {font-family: monospace, sans-serif;}
+			label, input[type=button], input[type=submit], input[type=file], button {cursor: pointer;}
+			button, input, select, textarea {margin: 0;}
+			button, input[type=button] {width: auto; overflow: visible;}
+
+			/* Fonts */
+			@import url(http://fonts.googleapis.com/css?family=Roboto);
+
+			/* Global styles */
+			.libgraph * {
+				font-family: 'Roboto', sans-serif;
+				-webkit-transition:all 200ms ease-out;
+				-moz-transition:all 200ms ease-out;
+				-ms-transition:all 200ms ease-out;
+				-o-transition:all 200ms ease-out;
+				transition:all 200ms ease-out
+			}
+			.libgraph {
+				width: 500px;
+				height: 200px;
+				margin: 10px auto 40px;
+				display: block;
+				position: relative;
+				border: 5px solid #f9f9f9;
+				font-size: 14px;
+			}
+			.libgraph .canvas {
+				width: 0;
+				overflow: hidden;
+
+				-webkit-transition:all 2s ease-out;
+				-moz-transition:all 2s ease-out;
+				-ms-transition:all 2s ease-out;
+				-o-transition:all 2s ease-out;
+				transition:all 2s ease-out
+			}
+
+			.libgraph .libstats {
+				color: #bbb;
+				font-size: 12px;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				text-align: center;
+			}
+			.libgraph .libstats li {
+				height: 100%;
+				position: absolute;
+				cursor: pointer;
+			}
+			.libgraph .libstats li .stats {
+				position: absolute;
+				width: 100%;
+			}
+			.libgraph .libstats li .bulle {
+				display: inline-block;
+				width: 16px;
+				height: 16px;
+				margin: 8px -8px -8px;
+				border-radius: 20px;
+				border: 3px solid #fff;
+				box-shadow: 0 0 15px rgba(0,0,0,.1);
+				opacity: 0;
+				left: 50%;
+				position: absolute;
+				z-index: 1
+			}
+			.libgraph .libstats li .value {
+				opacity: 0;
+				background: #fff;
+				top: -10px;
+				position: relative;
+				margin: 0 -100%;
+				padding: 5px 10px;
+				box-shadow: 0 0 15px rgba(0,0,0,.15);
+				border-radius: 5px;
+				white-space: nowrap;
+				z-index: 1;
+				pointer-events: none;
+			}
+			.libgraph .libstats li .subinfos {
+				width: 100%;
+				position: absolute;
+				margin-left: -50%;
+				bottom: -25px;
+				padding-top: 20px;
+				opacity: 0;
+			}
+
+			.libgraph .libinfos {
+				color: #000;
+				font-size: 10px;
+				padding: 2px;
+				margin-top: -2px;
+				pointer-events: none;
+				opacity: .4;
+			}
+			.libgraph .libinfos li {
+				position: absolute;
+				width: 100%;
+				border-bottom: 1px solid #ddd;
+			}
+
+			/* Active */
+			.libgraph.libactive .canvas { width: 100% }
+			.libgraph .libstats li.libactive .bulle { opacity: 1; margin: -8px; }
+			.libgraph .libstats li.libactive .subinfos { opacity: 1; }
+			.libgraph .libstats li.libactive:hover .value { opacity: 1; top: -30px; pointer-events: auto; }
+			.libgraph .libstats li.libactive:hover .bulle { background: #999!important }
+			.libgraph .libstats li.libactive:hover .subinfos { color: #555 }
+
+		</style>
+
+	</head>
+
+	<body>
+
+		<div
+			class="libgraph"
+			data-stats="0,40,25,50,60,100,120,80,54,60"
+			data-statsinfos="01/01,02/01,03/01,04/01,05/01,06/01,07/01,08/01,09/01,10/01"
+			data-infos="Visiteurs"
+			data-color="#BBCC00"
+		></div>
+		<div
+			class="libgraph"
+			data-stats="15000,16000,40000,70000,60000,90000,103482,40000,30000,60000"
+			data-statsinfos="01/01,02/01,03/01,04/01,05/01,06/01,07/01,08/01,09/01,10/01"
+			data-infos="Visiteurs"
+			data-color="#BBCC00"
+		></div>
+		<div
+			class="libgraph"
+			data-stats="10,2,5,8,7,7,4,3,5,9"
+			data-statsinfos="01/01,02/01,03/01,04/01,05/01,06/01,07/01,08/01,09/01,10/01"
+			data-infos="Visiteurs"
+			data-color="#BBCC00"
+		></div>
+
+		<script type="text/javascript" src="graphgen.js"></script>
+		
+	</body>
+
+</html>
